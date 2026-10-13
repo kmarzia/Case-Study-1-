@@ -1,6 +1,6 @@
 ---
 title: "Your Informative Title Here"
-author: "your names here"
+authors: "Marzia Rubaba and [enter your name here Mindy!!] "
 date: "Case Study 1: October 16, 2026"
 format: 
   pdf:
@@ -16,7 +16,10 @@ format:
       - top=1in
       - bottom=1in
 ---
+## Introduction 
+In the hard-fought 2000 U.S. Presidential election between Republican Nominee Geroge W. Bush and Democratic nominee Al Gore, the outcome hinged on the state of Florida. Because of a unique and confusing butterfly ballot system in Florida’s Palm Beach County, many Democratic voters claimed their votes mistakenly went to Reform Party candidate Pat Buchanan instead of Gore. Voters’ confusion with the ballot system is evident in the unusually large number of votes for Buchanan in Palm Beach County, as well as a striking number of 19,000 ballots discarded with two circles marked. This prompts the question: Did Buchanan receive an unusually large number of votes in Palm Beach County than in other counties, and if so, how many of those votes may have been intended for Gore? Using regression and prediction intervals, this case study aims to answer this question by providing statistical evidence regarding the claim that butterfly ballots caused voting errors and estimating the possible number of miscast votes. 
 
+## Intructions/Template 
 _Your written short report should be the first thing your reader encounters in your case study document. While you may choose to label each of the required components/sections of the short report with its own header (see below for an example of creating a header in Quarto), you do not need to do so provided that all of the required information is included. Your report should be self-contained and written in such a way that a quantitatively inclined friend (who has taken or is taking SDS 291) could follow what you did without necessarily knowing anything about the U.S. presidential election of 2000._ 
 
 _As you write your report, you may wish to reference the guide to typesetting regression lines in Quarto using LaTeX (linked at the top of our class Moodle page), the Quarto help page for formatting documents using Markdown (https://quarto.org/docs/authoring/markdown-basics.html), and the Quarto help page for customizing the output from executed code chunks (https://quarto.org/docs/computations/execution-options.html)._
