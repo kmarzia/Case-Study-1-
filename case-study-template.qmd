@@ -43,36 +43,44 @@ election_wo_pb <- election |> filter(County != "Palm Beach")
 wine <- Sleuth2::ex0823
 ```
 
-### An example section heading
 
-_When you create plots for your case study report, the `echo: false` chunk option tells Quarto to include the final output of your R commands (in this case, a plot) in your rendered PDF *without* printing the underlying R commands that generated that plot! The message and warning flags both prevent R from printing any additional text with error messages or warnings to the PDF._
+### 2.Data Description and Exploratory Data Analysis
+
+The dataset includes Bush and Buchanan's vote counts in Florida's 2000 presidential election. Palm Beach County was excluded because its confusing butterfly ballot may have caused some Gore supporters to accidentally vote for Buchanan. The remaining 66 counties were used to show the usual relationship between the two candidates' votes. In these counties, Buchanan received a median of 111 votes, while Palm Beach County had 3,407 votes, much higher than any other county. This makes Palm Beach County an unusual outlier.
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
 
-wine |> ggplot(aes(x = Wine, y = Mortality)) + geom_point() + ggtitle("Association between wine consumption and mortality rates.")
+election_wo_pb |> ggplot(aes(x = Bush2000, y = Buchanan2000)) + geom_point() + ggtitle("Association between Buchanan and Bush votes in 2000.")
 ```
 
-_When reporting the results of your regression analysis, I would like you to write out a mathematical description of the main/final population model for the mean. Here is an example of what that might look like:_
+As shown in the scatterplot, the relationship on the original scale displays severe right-skewness and heteroskedasticity. Most data points cluster near the origin, and the variability in Buchanan votes widens substantially as Bush votes increase. This fan-shaped dispersion violates the constant variance assumption of ordinary least squares, necessitating a natural log transformation on both variables before fitting the regression model.
 
-Let $mort_i$ denote the heart disease mortality rate in country $i$ (measured in deaths per 1,000 individuals) and $wine_i$ denote the consumption of wine (measured in liters per person per year). Our final linear regression model is $$E[mort_i | wine_i] = \beta_0 + \beta_1\left(wine_i\right).$$
+### 3.Modeling Process
 
-_You do not need to write out the fitted regression line, but you should (at a minimum) provide a table summarizing the estimated coefficients of the model and their corresponding standard errors, like the one shown below. A print-out from the `summary()` command alone is not sufficient._
+Let $Buchanan_i$ denote the votes for Buchanan in 2000 in Florida county $i$ ,and $Bush_i$ denote the votes for bush in 2000 in Florida county $i$. Our final linear regression model is 
+$$E[log(Buchanan_i) | log(Bush_i)] = \beta_0 + \beta_1\left(log(Bush_i\right)).$$
+
+The estimated model parameters, along with their standard errors, test statistics, and $p$-values, are presented in Table 1 below. The estimated intercept is $\hat{\beta}_0 = -2.341$ ($\text{SE} = 0.354$), and the estimated slope is $\hat{\beta}_1 = 0.731$ ($\text{SE} = 0.036$). This positive slope indicates that, holding other factors constant, every 1% increase in Bush votes is associated with an estimated 0.731% increase in Buchanan votes across the baseline counties.
 
 ```{r}
 #| echo: false
 
-# Fitting the regression line for mean mortality as a function of wine consumption
-wine_lm <- lm(Mortality ~ Wine, data = wine)
 
-# Representing the regression table as a dataframe (i.e., tidying the summary() output)
-wine_lm_table <- summary(wine_lm)$coefficients
+election_lm <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
 
-# Creating a nicely formatted table from the dataframe using the kable package
-#   You can find more information about this package here: https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf
-wine_lm_table |> kbl(col.names = c("Name for Col. 1", "Name for Col. 2", "Name for Col. 3", "Name for Col. 4"), align = "c", booktabs = T, linesep="", digits = c(2, 2, 2, 4)) |> kable_classic(full_width = F, latex_options = c("HOLD_position"))
+election_lm_table <- summary(election_lm)$coefficients
+
+election_lm_table |> kbl(
+  caption = "Table 1: Linear Regression Model for Log(Buchanan Votes) as a Function of Log(Bush Votes) (Excluding Palm Beach County)",
+  col.names = c("Term", "Estimate", "Std. Error", "t value","p-value"), 
+  align = "c", 
+  booktabs = T, 
+  linesep="", 
+  digits = c(3, 3, 2, 30)
+  ) |> kable_classic(full_width = F, latex_options = c("HOLD_position"))
 
 ```
 
@@ -95,23 +103,46 @@ election <- Sleuth2::ex0825
 
 # Creating a second dataset with Palm Beach County excluded
 election_wo_pb <- election |> filter(County != "Palm Beach")
+```
+```{r}
+# Compute summary statistics for contextual data description
+summary(election_wo_pb$Bush2000)
+summary(election_wo_pb$Buchanan2000)
+```
 
-# Loading another dataset on wine consumption and heart disease mortality
-wine <- Sleuth2::ex0823
 
-# Creating a scatterplot for the relationship between mortality and wine consumption
-wine |> ggplot(aes(x = Wine, y = Mortality)) + geom_point() + 
-  ggtitle("Association between wine consumption and mortality rates.")
+```{r}
+# Creating a scatterplot for the relationship between Buchanan votes and Bush votes on original scale, without Palm Beach
 
-# Fitting and summarizing the regression line for mean mortality 
-# as a function of wine consumption
-wine.lm <- lm(Mortality ~ Wine, data = wine)
-wine.lm.table <- wine.lm |> tidy()
-wine.lm.table |> kbl(col.names = c("Name for Col. 1", "Name for Col. 2", 
-                                   "Name for Col. 3", "Name for Col. 4", 
-                                   "Name for Col. 5"), 
-                     align = "c", booktabs = T, linesep="", 
-                     digits = c(2, 2, 2, 4)) |> 
-  kable_classic(full_width = F, latex_options = c("HOLD_position"))
+ggplot(election_wo_pb, aes(x = Bush2000, y = Buchanan2000)) +
+  geom_point() +
+  labs(
+    title = "Buchanan vs. Bush Votes (Original Scale, Excl. Palm Beach)",
+    x = "Bush Votes in 2000",
+    y = "Buchanan Votes in 2000"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+# Scatterplot on log-log scale
+ggplot(election_wo_pb, aes(x = log(Bush2000), y = log(Buchanan2000))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(
+    title = "Log(Buchanan) vs. Log(Bush) Votes (Excl. Palm Beach)",
+    x = "Log(Bush Votes)",
+    y = "Log(Buchanan Votes)"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+# Creating a readable regression table for the report
+election_lm <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
+election_lm_table <- summary(election_lm)$coefficients
+election_lm_table |> kbl(col.names = c("Term", "Estimate", "Std. Error", "t value","p-value"), align = "c", booktabs = T, linesep="", digits = c(3, 3, 2, 30)) |> kable_classic(full_width = F, latex_options = c("HOLD_position"))
 ```
 
