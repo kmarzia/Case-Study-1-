@@ -16,7 +16,7 @@ format:
       - top=1in
       - bottom=1in
 ---
-### 1.Introduction 
+### 1. Introduction 
 In the hard-fought U.S. Presidential election in the year 2000 between Republican Nominee George W. Bush and Democratic nominee Al Gore, the outcome hinged on the state of Florida. Because of a unique and confusing butterfly ballot system in Florida’s Palm Beach County, many Democratic voters claimed their votes mistakenly went to Reform Party candidate Pat Buchanan instead of Al Gore. Voters’ confusion with the ballot system is evident in the unusually large number of votes for Buchanan in Palm Beach County, as well as a striking number of 19,000 ballots discarded with two circles marked. This prompts the question: Did Buchanan receive an unusually large number of votes in Palm Beach County than in other counties, and if so, how many of those votes may have been intended for Gore? Using regression and prediction intervals, this case study aims to answer this question by comparing the voting pattern of other counties with that of Palm Beach County. 
 
 ### 2.Data Description and Exploratory Data Analysis
@@ -61,13 +61,13 @@ election_lm_table |> kbl(
 
 ### 4. 95% Prediction Interval for Predicted Buchanan votes in Palm Beach County
 
-Assuming that the relationship between Bush votes and Buchanan votes was the same in the Palm Beach County as it was in the other counties, a 95% prediction interval was created using the observed votes for Bush (152,846) and the untransformed fitted regression model for the 66 Florida counties. The resulting interval around the fitted value of 597.7677 (Buchanan's votes), was (364.709, 830.8264). 
+Assuming that the relationship between Bush votes and Buchanan votes was the same in Palm Beach County as it was in the other counties, a 95% prediction interval was created using the observed votes for Bush (152,846) and the untransformed fitted regression model for the 66 Florida counties. The resulting interval around the fitted value of 597.7677 (Buchanan's votes) was (364.709, 830.8264). 
 
-### 5. Using the prediction interval to determine mis-cast votes
+### 5. Using the prediction interval to determine miscast votes
 
-This suggests that with 152,846 votes for Bush, Palm Beach County was predicted to display approximately 598 votes for Buchanan with a 95% prediction interval ranging from about 365 votes to 831 votes. However, the original data showcases that Buchanan actually received 3,407 votes, which significantly exceeds the upper bound of the prediction interval. This indicates that approximately 2,809 votes for Buchanan were miscast in this county. 
+This suggests that with 152,846 votes for Bush, Palm Beach County was predicted to display approximately 598 votes for Buchanan with a 95% prediction interval ranging from about 365 votes to 831 votes. However, the original data shows that Buchanan actually received 3,407 votes, which significantly exceeds the upper bound of the prediction interval. This implies that approximately 2,809 votes for Buchanan may have been miscast in this county. 
 
-Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes with upper and lower bounds of the prediction interval, giving us a range of 2567-3042 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
+Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes and the upper and lower bounds of the prediction interval, giving us a range of 2567 - 3042 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
 
 ### 6. Limitations and Conclusion 
 
