@@ -1,6 +1,6 @@
 ---
-title: "Your Informative Title Here"
-authors: "Marzia Rubaba and [enter your name here Mindy!!] "
+title: "Investigating Voting Irregularities in the 2000 Presidential Election"
+authors: "Marzia Rubaba and Mindy Zhang "
 date: "Case Study 1: October 16, 2026"
 format: 
   pdf:
@@ -16,40 +16,12 @@ format:
       - top=1in
       - bottom=1in
 ---
-## Introduction 
-In the hard-fought 2000 U.S. Presidential election between Republican Nominee Geroge W. Bush and Democratic nominee Al Gore, the outcome hinged on the state of Florida. Because of a unique and confusing butterfly ballot system in Florida’s Palm Beach County, many Democratic voters claimed their votes mistakenly went to Reform Party candidate Pat Buchanan instead of Gore. Voters’ confusion with the ballot system is evident in the unusually large number of votes for Buchanan in Palm Beach County, as well as a striking number of 19,000 ballots discarded with two circles marked. This prompts the question: Did Buchanan receive an unusually large number of votes in Palm Beach County than in other counties, and if so, how many of those votes may have been intended for Gore? Using regression and prediction intervals, this case study aims to answer this question by providing statistical evidence regarding the claim that butterfly ballots caused voting errors and estimating the possible number of miscast votes. 
-
-## Intructions/Template 
-_Your written short report should be the first thing your reader encounters in your case study document. While you may choose to label each of the required components/sections of the short report with its own header (see below for an example of creating a header in Quarto), you do not need to do so provided that all of the required information is included. Your report should be self-contained and written in such a way that a quantitatively inclined friend (who has taken or is taking SDS 291) could follow what you did without necessarily knowing anything about the U.S. presidential election of 2000._ 
-
-_As you write your report, you may wish to reference the guide to typesetting regression lines in Quarto using LaTeX (linked at the top of our class Moodle page), the Quarto help page for formatting documents using Markdown (https://quarto.org/docs/authoring/markdown-basics.html), and the Quarto help page for customizing the output from executed code chunks (https://quarto.org/docs/computations/execution-options.html)._
-
-```{r}
-#| include: false
-
-# The written short report component of your case study should not have any visible R code, and the only R output that should be included are relevant plots and nicely formatted tables. Of course, this means that the R code to generate those figures/tables must be included *somewhere* in the Quarto .qmd document, but remain hidden from the reader! 
-#   We can accomplish this using chunk options, like the include: false option above.
-#   This tells Quarto to run and execute the code, but to exclude both the code and any associated output from the rendered PDF document.
-
-# Loading necessary packages
-library(tidyverse)
-library(Sleuth2)      # the package containing the data for the case study
-library(kableExtra)   # for creating nicely formatted tables in Quarto
-
-# Loading the case study data
-election <- Sleuth2::ex0825
-
-# Creating a second dataset with Palm Beach County excluded
-election_wo_pb <- election |> filter(County != "Palm Beach")
-
-# Loading another dataset on wine consumption and heart disease mortality (deaths per 1000 individuals), just as an example
-wine <- Sleuth2::ex0823
-```
-
+### 1.Introduction 
+In the hard-fought U.S. Presidential election in the year 2000 between Republican Nominee George W. Bush and Democratic nominee Al Gore, the outcome hinged on the state of Florida. Because of a unique and confusing butterfly ballot system in Florida’s Palm Beach County, many Democratic voters claimed their votes mistakenly went to Reform Party candidate Pat Buchanan instead of Al Gore. Voters’ confusion with the ballot system is evident in the unusually large number of votes for Buchanan in Palm Beach County, as well as a striking number of 19,000 ballots discarded with two circles marked. This prompts the question: Did Buchanan receive an unusually large number of votes in Palm Beach County than in other counties, and if so, how many of those votes may have been intended for Gore? Using regression and prediction intervals, this case study aims to answer this question by comparing the voting pattern of other counties with that of Palm Beach County. 
 
 ### 2.Data Description and Exploratory Data Analysis
 
-The dataset includes Bush and Buchanan's vote counts in Florida's 2000 presidential election. Palm Beach County was excluded because its confusing butterfly ballot may have caused some Gore supporters to accidentally vote for Buchanan. The remaining 66 counties were used to show the usual relationship between the two candidates' votes. In these counties, Buchanan received a median of 111 votes, while Palm Beach County had 3,407 votes, much higher than any other county. This makes Palm Beach County an unusual outlier.
+The dataset includes Bush and Buchanan's vote counts in Florida's 2000 presidential election. Palm Beach County was excluded because its confusing butterfly ballot may have caused some Democratic voters to accidentally vote for Buchanan. The remaining 66 counties were used to show the usual relationship between the two candidates' votes. In these counties, Buchanan received a median of 111 votes, while Palm Beach County had 3,407 votes, much higher than any other county. This makes Palm Beach County an unusual outlier.
 
 ```{r}
 #| echo: false
@@ -87,9 +59,19 @@ election_lm_table |> kbl(
 
 ```
 
-# R Appendix
+### 4. 95% Prediction Interval for Predicted Buchanan votes in Palm Beach County
 
-_Copy and paste all code that you used for your case study into one chunk at the end of your written report. Before submitting your case study, take one final look at the R Appendix and make sure that all code is clearly visible. If you see a line running off the side of the PDF, please split the code over multiple lines using a linebreak. The header at the top of this template should ensure that lines of code are automatically wrapped in your final document._
+Assuming that the relationship between Bush votes and Buchanan votes was the same in the Palm Beach County as it was in the other counties, a 95% prediction interval was created using the observed votes for Bush (152,846) and the untransformed fitted regression model for the 66 Florida counties. The resulting interval around the fitted value of 597.7677 (Buchanan's votes), was (364.709, 830.8264). 
+
+### 5. Using the prediction interval to determine mis-cast votes
+
+This suggests that with 152,846 votes for Bush, Palm Beach County was predicted to display approximately 598 votes for Buchanan with a 95% prediction interval ranging from about 365 votes to 831 votes. However, the original data showcases that Buchanan actually received 3,407 votes, which significantly exceeds the upper bound of the prediction interval. This indicates that approximately 2,809 votes for Buchanan were miscast in this county. 
+
+Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes with upper and lower bounds of the prediction interval, giving us a range of 2567-3042 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
+
+### 6. Limitations and Conclusion 
+
+# R Appendix
 
 ```{r}
 #| message: FALSE
@@ -147,5 +129,20 @@ ggplot(election_wo_pb, aes(x = log(Bush2000), y = log(Buchanan2000))) +
 election_lm <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
 election_lm_table <- summary(election_lm)$coefficients
 election_lm_table |> kbl(col.names = c("Term", "Estimate", "Std. Error", "t value","p-value"), align = "c", booktabs = T, linesep="", digits = c(3, 3, 2, 30)) |> kable_classic(full_width = F, latex_options = c("HOLD_position"))
+```
+
+```{r}
+#. Palm Beach values 
+palm_beach <- election |> 
+  filter(County == "Palm Beach")
+
+palm_beach
+```
+
+```{r}
+# 95% prediction interval for Palm Beach 
+
+election_wo_pb_lm <- lm(Buchanan2000 ~ Bush2000, data = election_wo_pb)
+predict(election_wo_pb_lm, newdata = data.frame(Bush2000 = 152846), interval = "prediction", conf.level = .95)
 ```
 
