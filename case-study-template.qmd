@@ -35,7 +35,7 @@ As shown in the scatterplot, the relationship on the original scale displays sev
 
 ### 3.Modeling Process
 
-Let $Buchanan_i$ denote the votes for Buchanan in 2000 in Florida county $i$ ,and $Bush_i$ denote the votes for bush in 2000 in Florida county $i$. Our final linear regression model is 
+Let $Buchanan_i$ denote the votes for Buchanan in 2000 in Florida county $i$, and $Bush_i$ denote the votes for Bush in 2000 in Florida county $i$. Our final linear regression model is 
 $$E[log(Buchanan_i) | log(Bush_i)] = \beta_0 + \beta_1\left(log(Bush_i\right)).$$
 
 The estimated model parameters, along with their standard errors, test statistics, and $p$-values, are presented in Table 1 below. The estimated intercept is $\hat{\beta}_0 = -2.341$ ($\text{SE} = 0.354$), and the estimated slope is $\hat{\beta}_1 = 0.731$ ($\text{SE} = 0.036$). This positive slope indicates that, holding other factors constant, every 1% increase in Bush votes is associated with an estimated 0.731% increase in Buchanan votes across the baseline counties.
@@ -61,13 +61,13 @@ election_lm_table |> kbl(
 
 ### 4. 95% Prediction Interval for Predicted Buchanan votes in Palm Beach County
 
-Assuming that the relationship between Bush votes and Buchanan votes was the same in Palm Beach County as it was in the other counties, a 95% prediction interval was created using the observed votes for Bush (152,846) and the untransformed fitted regression model for the 66 Florida counties. The resulting interval around the fitted value of 597.7677 (Buchanan's votes) was (364.709, 830.8264). 
+Assuming that the relationship between Bush votes and Buchanan votes was the same in Palm Beach County as it was in the other counties, a 95% prediction interval was created using the observed votes for Bush (152,846) in this county and the transformed fitted regression model for the 66 other counties. The resulting interval around the fitted value of 592.3769 (Buchanan's votes) was (250.8001, 1399.164). 
 
 ### 5. Using the prediction interval to determine miscast votes
 
-This suggests that with 152,846 votes for Bush, Palm Beach County was predicted to display approximately 598 votes for Buchanan with a 95% prediction interval ranging from about 365 votes to 831 votes. However, the original data shows that Buchanan actually received 3,407 votes, which significantly exceeds the upper bound of the prediction interval. This implies that approximately 2,809 votes for Buchanan may have been miscast in this county. 
+This suggests that with 152,846 votes for Bush, Palm Beach County was predicted to display approximately 593 votes for Buchanan with a 95% prediction interval ranging from about 251 votes to 1400 votes. However, the original data shows that Buchanan actually received 3,407 votes, which significantly exceeds the upper bound of the prediction interval. This implies that approximately 2,814 votes for Buchanan may have been miscast in this county. 
 
-Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes and the upper and lower bounds of the prediction interval, giving us a range of 2567 - 3042 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
+Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes and the upper and lower bounds of the prediction interval. This gives us a range of 2007 - 3156 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
 
 ### 6. Limitations and Conclusion 
 
@@ -142,7 +142,14 @@ palm_beach
 ```{r}
 # 95% prediction interval for Palm Beach 
 
-election_wo_pb_lm <- lm(Buchanan2000 ~ Bush2000, data = election_wo_pb)
-predict(election_wo_pb_lm, newdata = data.frame(Bush2000 = 152846), interval = "prediction", conf.level = .95)
+election_lm_pi <- predict(
+  election_lm, 
+  newdata = palm_beach, 
+  interval = "prediction", 
+  conf.level = .95)
+pb_pi <- exp(election_lm_pi)
+pb_pi
 ```
+
+
 
