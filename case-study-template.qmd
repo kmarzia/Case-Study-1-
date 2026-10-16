@@ -50,6 +50,21 @@ $$E[log(Buchanan_i) | log(Bush_i)] = \beta_0 + \beta_1\log(Bush_i).$$
 The estimated model parameters, along with their standard errors, test statistics, and $p$-values, are presented in Table 1 below. The estimated intercept is $\hat{\beta}_0 = -2.341$ ($\text{SE} = 0.354$), and the estimated slope is $\hat{\beta}_1 = 0.731$ ($\text{SE} = 0.036$). This positive slope indicates that, holding other factors constant, every 1% increase in Bush votes is associated with an estimated 0.731% increase in Buchanan votes across the baseline counties.
 
 ```{r}
+ #| echo: false 
+
+library(ggplot2) 
+library(tidyverse) 
+ggplot(election_wo_pb, aes(x = log(Bush2000), y = log(Buchanan2000))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(
+    title = "Association Between Log(Buchanan) vs. Log(Bush) Votes (Excl. Palm Beach)",
+    x = "Log(Bush Votes)",
+    y = "Log(Buchanan Votes)"
+  ) +
+  theme_minimal()
+
+```{r}
 #| echo: false
 
 
