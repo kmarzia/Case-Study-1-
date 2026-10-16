@@ -355,11 +355,11 @@ relationship, but it cannot prove that the butterfly ballot caused the
 voting errors. We do not have direct evidence of what individual voters
 intended to select.
 
-Although the log-log transformation helped address skewness and unequal
-variability in the data, some large-population counties may have had a
-strong influence on the regression results. Also, Palm Beach County may
-have differed from other counties because of its unique population and
-political preferences.
+Model Assumptions: Although the log-log transformation helped address
+skewness and unequal variability in the data, some large-population
+counties may have had a strong influence on the regression results.
+Also, Palm Beach County may have differed from other counties because of
+its unique population and political preferences.
 
 \section{R Appendix}\label{r-appendix}
 
@@ -376,11 +376,7 @@ political preferences.
 
 \CommentTok{\# Creating a second dataset with Palm Beach County excluded}
 \NormalTok{election\_wo\_pb }\OtherTok{\textless{}{-}}\NormalTok{ election }\SpecialCharTok{|\textgreater{}} \FunctionTok{filter}\NormalTok{(County }\SpecialCharTok{!=} \StringTok{"Palm Beach"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
 \CommentTok{\# Compute summary statistics for contextual data description}
 \FunctionTok{summary}\NormalTok{(election\_wo\_pb}\SpecialCharTok{$}\NormalTok{Bush2000)}
 \end{Highlighting}
@@ -417,7 +413,7 @@ political preferences.
 \end{Highlighting}
 \end{Shaded}
 
-\pandocbounded{\includegraphics[keepaspectratio]{case-study-template_files/figure-pdf/unnamed-chunk-5-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{case-study-template_files/figure-pdf/unnamed-chunk-3-1.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -434,11 +430,7 @@ political preferences.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-`geom_smooth()` using formula = 'y ~ x'
-\end{verbatim}
-
-\pandocbounded{\includegraphics[keepaspectratio]{case-study-template_files/figure-pdf/unnamed-chunk-6-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{case-study-template_files/figure-pdf/unnamed-chunk-3-2.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
