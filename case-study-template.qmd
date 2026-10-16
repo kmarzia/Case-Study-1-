@@ -27,6 +27,13 @@ The dataset includes Bush and Buchanan's vote counts in Florida's 2000 president
 #| echo: false
 #| message: false
 #| warning: false
+library(tidyverse)
+library(Sleuth2)
+library(broom)        
+library(kableExtra)   
+
+election <- Sleuth2::ex0825
+election_wo_pb <- election |> filter(County != "Palm Beach")
 
 election_wo_pb |> ggplot(aes(x = Bush2000, y = Buchanan2000)) + geom_point() + ggtitle("Association between Buchanan and Bush votes in 2000.")
 ```
@@ -36,7 +43,7 @@ As shown in the scatterplot, the relationship on the original scale displays sev
 ### 3.Modeling Process
 
 Let $Buchanan_i$ denote the votes for Buchanan in 2000 in Florida county $i$, and $Bush_i$ denote the votes for Bush in 2000 in Florida county $i$. Our final linear regression model is 
-$$E[log(Buchanan_i) | log(Bush_i)] = \beta_0 + \beta_1\left(log(Bush_i\right)).$$
+$$E[log(Buchanan_i) | log(Bush_i)] = \beta_0 + \beta_1\log(Bush_i).$$
 
 The estimated model parameters, along with their standard errors, test statistics, and $p$-values, are presented in Table 1 below. The estimated intercept is $\hat{\beta}_0 = -2.341$ ($\text{SE} = 0.354$), and the estimated slope is $\hat{\beta}_1 = 0.731$ ($\text{SE} = 0.036$). This positive slope indicates that, holding other factors constant, every 1% increase in Bush votes is associated with an estimated 0.731% increase in Buchanan votes across the baseline counties.
 
@@ -70,6 +77,17 @@ This suggests that with 152,846 votes for Bush, Palm Beach County was predicted 
 Furthermore, the prediction interval can be used to determine the range of miscast votes by finding the difference between the observed votes and the upper and lower bounds of the prediction interval. This gives us a range of 2007 - 3156 for potentially miscast votes. Assuming these excess votes were intended for Gore, our findings suggest that the confusing butterfly ballot may have contributed to a substantial number of voting errors in Palm Beach County. 
 
 ### 6. Limitations and Conclusion 
+
+In conclusion, our log-log regression model suggests that an unusually large number of votes may have been mistakenly cast for Pat Buchanan in Palm Beach County during the 2000 presidential election. The model estimates that about 2,815 votes may have been miscast, with a 95% prediction interval of 2,007 to 3,156 votes. This is much larger than George W. Bush’s official 537-vote margin of victory in Florida. These results suggest that confusion caused by the butterfly ballot may have affected the election results.  
+
+However, our analysis has some limitations:  
+
+Generalizability limitation: Our model only uses county-level data from Florida in the 2000 presidential election. Therefore, the results may not apply to other states, elections, or ballot designs.  
+
+Causality and Association limitation: Our model shows a statistical relationship, but it cannot prove that the butterfly ballot caused the voting errors. We do not have direct evidence of what individual voters intended to select.  
+
+Model Assumptions: Although the log-log transformation helped address skewness and unequal variability in the data, some large-population counties may have had a strong influence on the regression results. Also, Palm Beach County may have differed from other counties because of its unique population and political preferences.
+
 
 # R Appendix
 
@@ -146,7 +164,7 @@ election_lm_pi <- predict(
   election_lm, 
   newdata = palm_beach, 
   interval = "prediction", 
-  conf.level = .95)
+  level = .95)
 pb_pi <- exp(election_lm_pi)
 pb_pi
 ```
